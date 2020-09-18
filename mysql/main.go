@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"strings"
 )
 
@@ -24,10 +25,10 @@ var db *sql.DB
 //数据库配置
 const (
 	userName = "root"
-	password = "123456"
+	password = "root"
 	ip       = "127.0.0.1"
-	port     = "13306"
-	dbName   = "fileserver"
+	port     = "3306"
+	dbName   = "test"
 )
 
 //Db数据库连接池
@@ -46,7 +47,8 @@ func InitDB() {
 	//DB.SetMaxIdleConns(10)
 	//验证连接
 	if err := DB.Ping(); err != nil {
-		fmt.Println("opon database fail")
+		log.Println(err)
+		fmt.Println("open database fail")
 		return
 	}
 	fmt.Println("connnect success")
@@ -54,4 +56,57 @@ func InitDB() {
 
 func main() {
 	InitDB()
+	//InsertData(DB)
+	//SelectData(DB)
+	//
+	SelectManyRow(DB)
+
+}
+
+func CreateTable(DB *sql.DB) {
+
+}
+
+func InsertData(DB *sql.DB) {
+	res, err := DB.Exec("insert INTO user(name,age) values (?,?)", "HAHAHA", 25)
+	if err != nil {
+		fmt.Printf("Insert data failed,err:%v", err)
+		return
+	}
+	lastInsertID, err := res.LastInsertId()
+
+	rowsaffected, err := res.RowsAffected()
+
+	log.Println(lastInsertID)
+	log.Println(rowsaffected)
+
+}
+
+func SelectData(DB *sql.DB) {
+
+	user := new(User)
+	row := DB.QueryRow("select * from user")
+
+	row.Scan(&user.Id, &user.Name, &user.Age)
+	log.Println(user)
+}
+
+func SelectManyRow(DB *sql.DB) {
+
+	user := new(User)
+	//res := []User{}
+	row, _ := DB.Query("select * from user")
+
+	for row.Next() {
+		row.Scan(&user.Id, &user.Name, &user.Age)
+		log.Println(user)
+	}
+}
+
+
+
+type User struct {
+	Id   int
+	Name string
+	Age  int
 }
