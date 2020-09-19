@@ -1,8 +1,12 @@
 package v2_service
 
 import (
+	"context"
+	"fmt"
 	"go.uber.org/zap"
 )
+
+const ContextReqUUid = "req_uuid"
 
 type NewMiddlewareServer func(Service) Service
 
@@ -20,14 +24,14 @@ func NewLogMiddlewareServer(log *zap.Logger) NewMiddlewareServer {
 	}
 }
 
-func (l logMiddlewareServer) Test(in TestRequest) (out TestResponse) {
+func (l logMiddlewareServer) Test(ctx context.Context, in TestRequest) (out TestResponse) {
 	defer func() {
-		l.log.Debug("kit_log_test_v2",
-			zap.Any("调用v2_service logMiddlewareServer", "Add"),
+		l.log.Debug(fmt.Sprint(ctx.Value(ContextReqUUid)),
+			zap.Any("调用v2_service logMiddlewareServer", "Test"),
 			zap.Any("req", in),
 			zap.Any("res", out),
 		)
 	}()
-	out = l.next.Test(in)
+	out = l.next.Test(ctx, in)
 	return out
 }

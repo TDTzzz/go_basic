@@ -1,0 +1,7 @@
+{"level":"debug","ts":1600506965996,"caller":"v2_transport/transport.go:26","msg":"给这个请求加上uuid","UUID":"8feb18f1-0411-5eac-9841-5209ab3fc81f"}
+{"level":"debug","ts":1600506965996,"caller":"v2_transport/transport.go:53","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f","开始请求数据":{"a":1,"b":2}}
+{"level":"debug","ts":1600506965999,"caller":"v2_service/service.go:21","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f{调用v2_service Service 15 0 Test 处理请求 <nil>}"}
+{"level":"debug","ts":1600506965999,"caller":"v2_service/service.go:24","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f","调用v2_service Service":"Test 处理请求","处理返回值":3}
+{"level":"debug","ts":1600506965999,"caller":"v2_service/middleware.go:29","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f","调用v2_service logMiddlewareServer":"Test","req":{"a":1,"b":2},"res":{"res":3}}
+{"level":"debug","ts":1600506965999,"caller":"v2_endpoint/middleware.go:17","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f","调用v2_endpoint LoggingMiddleware":"处理完请求","耗时毫秒":2}
+{"level":"debug","ts":1600506965999,"caller":"v2_transport/transport.go:58","msg":"8feb18f1-0411-5eac-9841-5209ab3fc81f","请求结束封装返回值":{"res":3}}

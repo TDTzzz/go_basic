@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go.uber.org/zap"
+	"go_basic/go-kit/v2/utils"
 	"go_basic/go-kit/v2/v2_endpoint"
 	"go_basic/go-kit/v2/v2_service"
 	"go_basic/go-kit/v2/v2_transport"
@@ -9,10 +9,9 @@ import (
 )
 
 func main() {
-
-	var log *zap.Logger
-	server := v2_service.NewServer(log)
-	endpoints := v2_endpoint.MakeEndpointServer(server, log)
-	httpHandler := v2_transport.NewHttpHandler(endpoints, log)
-	http.ListenAndServe("0.0.0.0:8885", httpHandler)
+	utils.NewLoggerServer()
+	server := v2_service.NewServer(utils.GetLogger())
+	endpoints := v2_endpoint.MakeEndpointServer(server, utils.GetLogger())
+	httpHandler := v2_transport.NewHttpHandler(endpoints, utils.GetLogger())
+	http.ListenAndServe("0.0.0.0:8886", httpHandler)
 }

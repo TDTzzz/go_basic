@@ -23,7 +23,7 @@ func MakeEndpointServer(svc v2_service.Service, log *zap.Logger) EndPointServer 
 func MakeAddEndPoint(svc v2_service.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(v2_service.TestRequest)
-		out := svc.Test(req)
+		out := svc.Test(ctx, req)
 		return out, nil
 	}
 }

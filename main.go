@@ -1,10 +1,16 @@
 package main
 
-import "log"
+import (
+	"log"
+	"path/filepath"
+)
 
 func main() {
-	arr := []int{1, 2, 3, 5, 6}
+	join := filepath.Join("main.go")
+	log.Println(join)
+	dir := filepath.Dir(join)
+	log.Println(dir)
 
-	res := len(arr) / 2
+	res, _ := filepath.Abs("main.go")
 	log.Println(res)
 }

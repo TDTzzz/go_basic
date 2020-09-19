@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	httptransport "github.com/go-kit/kit/transport/http"
+	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
+	"go_basic/go-kit/v2/utils"
 	"go_basic/go-kit/v2/v2_endpoint"
 	"go_basic/go-kit/v2/v2_service"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -16,13 +17,14 @@ import (
 func NewHttpHandler(endpoint v2_endpoint.EndPointServer, log *zap.Logger) http.Handler {
 	options := []httptransport.ServerOption{
 		httptransport.ServerErrorEncoder(func(ctx context.Context, err error, w http.ResponseWriter) {
-			log.Warn(fmt.Sprint("uuid"), zap.Error(err))
+			log.Warn(fmt.Sprint(ctx.Value(v2_service.ContextReqUUid)), zap.Error(err))
 			w.WriteHeader(http.StatusOK)
 			json.NewEncoder(w).Encode(errWrapper{Error: err.Error()})
 		}),
 		httptransport.ServerBefore(func(ctx context.Context, request *http.Request) context.Context {
-			log.Debug("添加uuid", zap.Any("UUID", "test_uuid"))
-			ctx = context.WithValue(ctx, "qaa", "sss")
+			UUID := uuid.NewV5(uuid.Must(uuid.NewV4(), nil), "req_uuid").String()
+			log.Debug("给这个请求加上uuid", zap.Any("UUID", UUID))
+			ctx = context.WithValue(ctx, v2_service.ContextReqUUid, UUID)
 			return ctx
 		}),
 	}
@@ -48,12 +50,12 @@ func decodeHTTPADDRequest(ctx context.Context, r *http.Request) (interface{}, er
 		return in, err
 	}
 
-	log.Println("开始请求数据")
+	utils.GetLogger().Debug(fmt.Sprint(ctx.Value(v2_service.ContextReqUUid)), zap.Any("开始请求数据", in))
 	return in, nil
 }
 
 func encodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
-	log.Println("请求结束封装返回值")
+	utils.GetLogger().Debug(fmt.Sprint(ctx.Value(v2_service.ContextReqUUid)), zap.Any("请求结束封装返回值", response))
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	return json.NewEncoder(w).Encode(response)
 }
