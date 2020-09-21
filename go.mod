@@ -9,7 +9,9 @@ require (
 	github.com/gorilla/mux v1.7.3
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/satori/go.uuid v1.2.0
+	go.uber.org/ratelimit v0.1.0
 	go.uber.org/zap v1.16.0
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 	gorm.io/driver/mysql v1.0.1 // indirect
 	gorm.io/gorm v1.20.0 // indirect
 )
