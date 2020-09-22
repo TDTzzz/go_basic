@@ -1,0 +1,8 @@
+{"level":"debug","ts":1600754774294,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"1d82373c-601e-5668-b382-34f35698edad"}
+{"level":"debug","ts":1600754942652,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"152090d0-542a-5b50-93bf-d69b329ebc84"}
+{"level":"debug","ts":1600754956833,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"5ae6bb07-a313-5824-a572-d2fe65d336f3"}
+{"level":"debug","ts":1600756216858,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"3305c5be-e881-5a3e-9a20-54edf8a6f53c"}
+{"level":"debug","ts":1600756289515,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"ba90e1e5-02af-5bba-ac39-6be0187a3ff6"}
+{"level":"debug","ts":1600756453292,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"a8194c02-48ae-5c23-b665-355cef966513"}
+{"level":"debug","ts":1600757881539,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"fde5a3ed-4a2d-50a1-90f2-5fa39eaf7b7d"}
+{"level":"debug","ts":1600758557057,"caller":"client/client.go:20","msg":"给请求添加uuid","UUID":"61e8f183-e52e-52c0-9272-34ca91cb0cc6"}
