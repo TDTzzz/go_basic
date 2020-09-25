@@ -127,3 +127,11 @@ func (s *registryServer) GetVal(node Node) (string, error) {
 func (e *registryServer) HashKey(addr string) uint32 {
 	return crc32.ChecksumIEEE([]byte(addr))
 }
+
+func NewOptions(name string, ttl int64, config clientv3.Config) Options {
+	return Options{
+		name:   name,
+		ttl:    ttl,
+		config: config,
+	}
+}

@@ -16,6 +16,7 @@ func TestNewRegistry(t *testing.T) {
 			DialTimeout: 5 * time.Second},
 	}
 	for i := 1; i <= 3; i++ {
+		t.Log("!!!!!!!", i)
 		r, err := NewRegistry(op)
 		if err != nil {
 			t.Error(err)
@@ -36,26 +37,3 @@ func TestNewRegistry(t *testing.T) {
 	}
 	time.Sleep(time.Second * 5)
 }
-
-//func TestNewSelector(t *testing.T) {
-//	var op = SelectorOptions{
-//		name: "svc.info",
-//		config: clientv3.Config{
-//			Endpoints:   []string{"http://localhost:2379/"},
-//			DialTimeout: 5 * time.Second},
-//	}
-//	s, err := NewSelector(op)
-//	if err != nil {
-//		t.Error(err)
-//		return
-//	}
-//	for {
-//		val, err := s.Next()
-//		if err != nil {
-//			t.Error(err)
-//			continue
-//		}
-//		fmt.Println(val)
-//		time.Sleep(time.Second * 2)
-//	}
-//}

@@ -131,3 +131,10 @@ func (s *selectorServer) GetVal(val []byte) (Node, error) {
 	}
 	return node, nil
 }
+
+func NewSelectorOptions(name string, config clientv3.Config) SelectorOptions {
+	return SelectorOptions{
+		name:   name,
+		config: config,
+	}
+}
