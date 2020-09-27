@@ -37,15 +37,15 @@ func init() {
 func main() {
 	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/howie", howie)
-	fmt.Println("127.0.0.1:9090")
-	err := http.ListenAndServe("127.0.0.1:9090", nil)
+	fmt.Println("127.0.0.1:9092")
+	err := http.ListenAndServe("127.0.0.1:9092", nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
 func howie(w http.ResponseWriter, r *http.Request) {
-	l
+
 	httpRequestCount.WithLabelValues(r.URL.Path).Inc()
 	start := time.Now()
 	n := rand.Intn(100)

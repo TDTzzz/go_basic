@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -69,7 +70,7 @@ func main() {
 			time.Sleep(time.Duration(100*oscillationFactor()) * time.Millisecond)
 		}
 	}()
-	
+
 	go func() {
 		for {
 			v := (rand.NormFloat64() * *normDomain) + *normMean
