@@ -1,4 +1,4 @@
-package main
+package user_agent
 
 import (
 	"context"
@@ -8,12 +8,15 @@ import (
 	metricsprometheus "github.com/go-kit/kit/metrics/prometheus"
 	"github.com/go-kit/kit/sd/etcdv3"
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	grpcmiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
-	"go_basic/go-kit/v8/user_agent/pb"
-	"go_basic/go-kit/v8/user_agent/src"
-	"go_basic/go-kit/v8/utils"
+	"go_basic/go-kit/v9/user_agent/pb"
+	"go_basic/go-kit/v9/user_agent/src"
+	"go_basic/go-kit/v9/utils"
 	"golang.org/x/time/rate"
 	"google.golang.org/grpc"
 	"hash/crc32"
@@ -26,7 +29,7 @@ import (
 )
 
 var grpcAddr = flag.String("g", "127.0.0.1:8881", "grpcAddr")
-var prometheusAddr = flag.String("p", "127.0.0.1:9093", "prometheus addr")
+var prometheusAddr = flag.String("p", "192.168.2.28:10001", "prometheus addr")
 
 var quitChan = make(chan error, 1)
 
@@ -39,11 +42,11 @@ func main() {
 	)
 	utils.NewLoggerServer()
 	//初始化etcd客户端
-	optios := etcdv3.ClientOptions{
+	options := etcdv3.ClientOptions{
 		DialTimeout:   ttl,
 		DialKeepAlive: ttl,
 	}
-	etcdClient, err := etcdv3.NewClient(context.Background(), etcdAddrs, optios)
+	etcdClient, err := etcdv3.NewClient(context.Background(), etcdAddrs, options)
 	if err != nil {
 		utils.GetLogger().Error("[user_agent] NewClient", zap.Error(err))
 		return
@@ -52,9 +55,14 @@ func main() {
 		Key:   fmt.Sprintf("%s/%d", serName, crc32.ChecksumIEEE([]byte(*grpcAddr))),
 		Value: *grpcAddr,
 	}, log.NewNopLogger())
-	
-	utils.GetLogger().Info(fmt.Sprintf("%s/%d", serName, crc32.ChecksumIEEE([]byte(*grpcAddr))))
+
 	go func() {
+		tracer, _, err := utils.NewJaegerTracer("user_agent_server")
+		if err != nil {
+			utils.GetLogger().Warn("[user_agent] NewJaegerTracer",
+				zap.Error(err))
+			quitChan <- err
+		}
 		count := metricsprometheus.NewCounterFrom(prometheus.CounterOpts{
 			Subsystem: "user_agent",
 			Name:      "request_count",
@@ -66,31 +74,33 @@ func main() {
 			Name:      "request_consume",
 			Help:      "Request consumes time",
 		}, []string{"method"})
-
 		golangLimit := rate.NewLimiter(10, 1)
-		server := src.NewService(utils.GetLogger(), count, histogram)
-		endpoints := src.NewEndPointServer(server, golangLimit)
+		server := src.NewService(utils.GetLogger(), count, histogram, tracer)
+		endpoints := src.NewEndPointServer(server, golangLimit, tracer)
 		grpcServer := src.NewGRPCServer(endpoints, utils.GetLogger())
 		grpcListener, err := net.Listen("tcp", *grpcAddr)
 		if err != nil {
-			utils.GetLogger().Warn("[user_agent] Listen", zap.Error(err))
+			utils.GetLogger().Warn("[user_agent]grpc run" + *grpcAddr)
 			quitChan <- err
 			return
 		}
 		Registrar.Register()
-		utils.GetLogger().Info("[user_agent] grpc run " + *grpcAddr)
-		baseServer := grpc.NewServer(grpc.UnaryInterceptor(grpctransport.Interceptor))
+		utils.GetLogger().Info("[user_agent] grpc run" + *grpcAddr)
+		chainUnaryServer := grpcmiddleware.ChainUnaryServer(
+			grpctransport.Interceptor,
+			grpc_opentracing.UnaryServerInterceptor(grpc_opentracing.WithTracer(tracer)),
+			grpc_zap.UnaryServerInterceptor(utils.GetLogger()),
+		)
+		baseServer := grpc.NewServer(grpc.UnaryInterceptor(chainUnaryServer))
 		pb.RegisterUserServer(baseServer, grpcServer)
 		quitChan <- baseServer.Serve(grpcListener)
 	}()
-
 	go func() {
-		utils.GetLogger().Info("[user_agent] prometheus run " + *prometheusAddr)
+		utils.GetLogger().Info("[user_agent] prometheus run" + *prometheusAddr)
 		m := http.NewServeMux()
 		m.Handle("/metrics", promhttp.Handler())
 		quitChan <- http.ListenAndServe(*prometheusAddr, m)
 	}()
-
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
@@ -98,7 +108,6 @@ func main() {
 	}()
 
 	err = <-quitChan
-
 	Registrar.Deregister()
 	utils.GetLogger().Info("[user_agent] quit", zap.Any("info", err))
 }

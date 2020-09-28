@@ -6,7 +6,6 @@ import (
 	"sync"
 )
 
-//服务熔断
 var config = hystrix.CommandConfig{
 	Timeout:                5000, //执行command的超时时间(毫秒)
 	MaxConcurrentRequests:  8,    //command的最大并发量
@@ -37,7 +36,6 @@ func (s *Hystrix) Run(name string, run runFunc) error {
 	err := hystrix.Do(name, func() error {
 		return run()
 	}, func(err error) error {
-		//fmt.Println("运行 run 方法错误", err)
 		return errors.New(s.fallback)
 	})
 	if err != nil {

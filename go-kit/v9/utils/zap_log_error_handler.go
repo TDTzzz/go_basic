@@ -10,8 +10,10 @@ type LogErrorHandler struct {
 	logger *zap.Logger
 }
 
-func NewZapLogErrorHandler(loggger *zap.Logger) *LogErrorHandler {
-	return &LogErrorHandler{logger: logger}
+func NewZapLogErrorHandler(logger *zap.Logger) *LogErrorHandler {
+	return &LogErrorHandler{
+		logger: logger,
+	}
 }
 
 func (h *LogErrorHandler) Handle(ctx context.Context, err error) {

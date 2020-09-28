@@ -5,6 +5,8 @@ import (
 	"go_basic/pkg_library/logtool"
 )
 
+const ContextReqUUid = "req_uuid"
+
 var logger *zap.Logger
 
 func NewLoggerServer() {

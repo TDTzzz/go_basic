@@ -1,0 +1,14 @@
+{"level":"info","ts":1601257401403,"caller":"logtool/log.go:91","msg":"[NewLogger] success"}
+{"level":"info","ts":1601257401404,"caller":"user_agent/main.go:87","msg":"[user_agent] prometheus run 127.0.0.1:9093"}
+{"level":"info","ts":1601257401495,"caller":"user_agent/main.go:80","msg":"[user_agent] grpc run 127.0.0.1:8881"}
+{"level":"info","ts":1601257425101,"caller":"user_agent/main.go:102","msg":"[user_agent] quit","info":"interrupt"}
+{"level":"info","ts":1601257460211,"caller":"logtool/log.go:91","msg":"[NewLogger] success"}
+{"level":"info","ts":1601257460212,"caller":"user_agent/main.go:56","msg":"%s/%dsvc.user.agent1904384262"}
+{"level":"info","ts":1601257460212,"caller":"user_agent/main.go:88","msg":"[user_agent] prometheus run 127.0.0.1:9093"}
+{"level":"info","ts":1601257460309,"caller":"user_agent/main.go:81","msg":"[user_agent] grpc run 127.0.0.1:8881"}
+{"level":"info","ts":1601257558790,"caller":"user_agent/main.go:103","msg":"[user_agent] quit","info":"interrupt"}
+{"level":"info","ts":1601257561723,"caller":"logtool/log.go:91","msg":"[NewLogger] success"}
+{"level":"info","ts":1601257561725,"caller":"user_agent/main.go:56","msg":"svc.user.agent/1904384262"}
+{"level":"info","ts":1601257561725,"caller":"user_agent/main.go:88","msg":"[user_agent] prometheus run 127.0.0.1:9093"}
+{"level":"info","ts":1601257561739,"caller":"user_agent/main.go:81","msg":"[user_agent] grpc run 127.0.0.1:8881"}
+{"level":"info","ts":1601257790313,"caller":"user_agent/main.go:103","msg":"[user_agent] quit","info":"interrupt"}
