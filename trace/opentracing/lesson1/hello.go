@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/opentracing/opentracing-go/log"
-	"go_basic/trace/opentracing/lesson1/tracing"
+	"go_basic/trace/opentracing/lib/tracing"
 	"os"
 )
 
@@ -26,9 +26,7 @@ func main() {
 		log.String("value", helloStr),
 	)
 
-	println(helloStr)
+	//println(helloStr)
 	span.LogKV("event", "println")
-
 	span.Finish()
-
 }
