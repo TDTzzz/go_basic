@@ -35,6 +35,7 @@ func (engine *Engine) POST(pattern string, handler HandlerFunc) {
 
 // Run defines the method to start a http server
 func (engine *Engine) Run(addr string) (err error) {
+	engine.router.WatchChildren()
 	return http.ListenAndServe(addr, engine)
 }
 
