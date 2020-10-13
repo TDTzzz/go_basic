@@ -104,6 +104,9 @@ func (r *router) handle(c *Context) {
 //遍历children
 func (r *router) WatchChildren() {
 
+	for k, v := range r.handlers {
+		log.Println(k, v)
+	}
 	for k, v := range r.roots {
 		log.Println("遍历root", k, v)
 		traversalChildren(v.children, 0)
@@ -117,6 +120,10 @@ func traversalChildren(children []*node, height int) {
 		for _, v := range children {
 			fmt.Println("children--", "pattern:"+v.pattern, "---", "part:"+v.part, "---", height)
 
+			fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "pattern  ", v.pattern, 0x1B)
+			fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "part  ", v.part, 0x1B)
+			fmt.Printf("%c[0;47;32m%s%d%c[0m\n", 0x1B, "height  ", height, 0x1B)
+			fmt.Println()
 			traversalChildren(v.children, height+1)
 		}
 	}
