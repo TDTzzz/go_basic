@@ -13,6 +13,7 @@ func newTestRouter() *router {
 	r.addRoute("GET", "/hello/b/c", nil)
 	r.addRoute("GET", "/hi/:name", nil)
 	r.addRoute("GET", "/assets/*filepath", nil)
+	r.addRoute("GET", "/p/:lang/doc", nil)
 	return r
 }
 

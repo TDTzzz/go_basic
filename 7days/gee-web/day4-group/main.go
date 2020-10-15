@@ -1,4 +1,4 @@
-package day4_group
+package main
 
 import (
 	"go_basic/7days/gee-web/day4-group/gee"
