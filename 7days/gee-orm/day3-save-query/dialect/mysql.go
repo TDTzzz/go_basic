@@ -7,10 +7,9 @@ import (
 	"time"
 )
 
-type mysql struct{}
-
-//todo 需要理解
 var _ Dialect = (*mysql)(nil)
+
+type mysql struct{}
 
 func init() {
 	log.Println("mysql init!!!!")
