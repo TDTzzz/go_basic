@@ -20,9 +20,9 @@ func testRecordInit(t *testing.T) *Session {
 }
 
 func TestSession_Find(t *testing.T) {
-	testRecordInit(t)
-	//var users []user
-	//if err := s.Find(&users); err != nil || len(users) != 2 {
-	//	t.Fatal("failed to query all")
-	//}
+	s := testRecordInit(t)
+	var users []users
+	if err := s.Find(&users); err != nil || len(users) != 2 {
+		t.Fatal("failed to query all")
+	}
 }
