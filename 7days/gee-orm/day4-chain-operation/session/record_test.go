@@ -20,10 +20,10 @@ func testRecordInit(t *testing.T) *Session {
 	return s
 }
 
-func TestSession_Insert(t *testing.T) {
-	s := testRecordInit(t)
-	affected, err := s.Insert(user3)
-	if err != nil || affected != 1 {
-		t.Fatal("failed to create record")
-	}
-}
+//func TestSession_Insert(t *testing.T) {
+//	s := testRecordInit(t)
+//	affected, err := s.Insert(user3)
+//	if err != nil || affected != 1 {
+//		t.Fatal("failed to create record")
+//	}
+//}
