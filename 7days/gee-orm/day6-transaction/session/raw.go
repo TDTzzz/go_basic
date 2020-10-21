@@ -2,10 +2,10 @@ package session
 
 import (
 	"database/sql"
-	"go_basic/7days/gee-orm/day5-hooks/clause"
-	"go_basic/7days/gee-orm/day5-hooks/dialect"
-	"go_basic/7days/gee-orm/day5-hooks/log"
-	"go_basic/7days/gee-orm/day5-hooks/schema"
+	"go_basic/7days/gee-orm/day6-transaction/clause"
+	"go_basic/7days/gee-orm/day6-transaction/dialect"
+	"go_basic/7days/gee-orm/day6-transaction/log"
+	"go_basic/7days/gee-orm/day6-transaction/schema"
 	"strings"
 )
 
@@ -13,9 +13,10 @@ type Session struct {
 	db       *sql.DB
 	dialect  dialect.Dialect
 	refTable *schema.Schema
-	clause   clause.Clause
-	sql      strings.Builder
-	sqlVars  []interface{}
+
+	clause  clause.Clause
+	sql     strings.Builder
+	sqlVars []interface{}
 }
 
 func New(db *sql.DB, dialect dialect.Dialect) *Session {

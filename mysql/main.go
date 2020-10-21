@@ -23,14 +23,6 @@ var db *sql.DB
 //}
 
 //数据库配置
-const (
-	userName = "root"
-	password = "root"
-	ip       = "127.0.0.1"
-	port     = "3306"
-	dbName   = "test"
-)
-
 //Db数据库连接池
 var DB *sql.DB
 
@@ -51,7 +43,7 @@ func InitDB() {
 		fmt.Println("open database fail")
 		return
 	}
-	fmt.Println("connnect success")
+	fmt.Println("connect success")
 }
 
 func main() {
@@ -101,12 +93,4 @@ func SelectManyRow(DB *sql.DB) {
 		row.Scan(&user.Id, &user.Name, &user.Age)
 		log.Println(user)
 	}
-}
-
-
-
-type User struct {
-	Id   int
-	Name string
-	Age  int
 }

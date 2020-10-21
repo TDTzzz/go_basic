@@ -18,5 +18,5 @@ func (m mysql) DataTypeOf(typ reflect.Value) string {
 
 func (m mysql) TableExistSQL(tableName string) (string, []interface{}) {
 	args := []interface{}{tableName}
-	return "SELECT name FROM sqlite_master WHERE type='table' and name = ?", args
+	return "SELECT table_name FROM information_schema.TABLES WHERE table_name= ?", args
 }

@@ -2,8 +2,8 @@ package session
 
 import (
 	"fmt"
-	"go_basic/7days/gee-orm/day5-hooks/log"
-	"go_basic/7days/gee-orm/day5-hooks/schema"
+	"go_basic/7days/gee-orm/day6-transaction/log"
+	"go_basic/7days/gee-orm/day6-transaction/schema"
 	"reflect"
 	"strings"
 )

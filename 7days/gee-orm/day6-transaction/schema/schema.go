@@ -1,9 +1,8 @@
 package schema
 
 import (
-	"fmt"
 	"go/ast"
-	"go_basic/7days/gee-orm/day3-save-query/dialect"
+	"go_basic/7days/gee-orm/day6-transaction/dialect"
 	"reflect"
 )
 
@@ -21,24 +20,25 @@ type Schema struct {
 	fieldMap   map[string]*Field
 }
 
+type ITableName interface {
+	TableName() string
+}
+
 func (schema *Schema) GetField(name string) *Field {
 	return schema.fieldMap[name]
 }
 
+// Values return the values of dest's member variables
 func (schema *Schema) RecordValues(dest interface{}) []interface{} {
 	destValue := reflect.Indirect(reflect.ValueOf(dest))
 	var fieldValues []interface{}
-
 	for _, field := range schema.Fields {
 		fieldValues = append(fieldValues, destValue.FieldByName(field.Name).Interface())
 	}
 	return fieldValues
 }
 
-type ITableName interface {
-	TableName() string
-}
-
+// Parse a struct to a Schema instance
 func Parse(dest interface{}, d dialect.Dialect) *Schema {
 	modelType := reflect.Indirect(reflect.ValueOf(dest)).Type()
 	var tableName string
@@ -48,22 +48,18 @@ func Parse(dest interface{}, d dialect.Dialect) *Schema {
 	} else {
 		tableName = t.TableName()
 	}
-
 	schema := &Schema{
 		Model:    dest,
 		Name:     tableName,
 		fieldMap: make(map[string]*Field),
 	}
-
 	for i := 0; i < modelType.NumField(); i++ {
 		p := modelType.Field(i)
 		if !p.Anonymous && ast.IsExported(p.Name) {
-
 			field := &Field{
 				Name: p.Name,
 				Type: d.DataTypeOf(reflect.Indirect(reflect.New(p.Type))),
 			}
-
 			if v, ok := p.Tag.Lookup("geeorm"); ok {
 				field.Tag = v
 			}
@@ -72,6 +68,5 @@ func Parse(dest interface{}, d dialect.Dialect) *Schema {
 			schema.fieldMap[p.Name] = field
 		}
 	}
-
 	return schema
 }

@@ -2,7 +2,7 @@ package session
 
 import (
 	"errors"
-	"go_basic/7days/gee-orm/day5-hooks/clause"
+	"go_basic/7days/gee-orm/day6-transaction/clause"
 	"reflect"
 )
 
