@@ -13,10 +13,10 @@ type Session struct {
 	db       *sql.DB
 	dialect  dialect.Dialect
 	refTable *schema.Schema
-
-	clause  clause.Clause
-	sql     strings.Builder
-	sqlVars []interface{}
+	tx       *sql.Tx
+	clause   clause.Clause
+	sql      strings.Builder
+	sqlVars  []interface{}
 }
 
 func New(db *sql.DB, dialect dialect.Dialect) *Session {
