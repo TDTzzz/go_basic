@@ -1,4 +1,4 @@
-package day3_service
+package day4_timeout
 
 import (
 	"go/ast"
@@ -14,13 +14,19 @@ type methodType struct {
 	numCalls  uint64
 }
 
+type service struct {
+	name   string
+	typ    reflect.Type
+	rcvr   reflect.Value
+	method map[string]*methodType
+}
+
 func (m *methodType) NumCalls() uint64 {
 	return atomic.LoadUint64(&m.numCalls)
 }
 
 func (m *methodType) newArgv() reflect.Value {
 	var argv reflect.Value
-	// arg may be a pointer type, or a value type
 	if m.ArgType.Kind() == reflect.Ptr {
 		argv = reflect.New(m.ArgType.Elem())
 	} else {
@@ -30,7 +36,6 @@ func (m *methodType) newArgv() reflect.Value {
 }
 
 func (m *methodType) newReplyv() reflect.Value {
-	// reply must be a pointer type
 	replyv := reflect.New(m.ReplyType.Elem())
 	switch m.ReplyType.Elem().Kind() {
 	case reflect.Map:
@@ -41,21 +46,17 @@ func (m *methodType) newReplyv() reflect.Value {
 	return replyv
 }
 
-type service struct {
-	name   string
-	typ    reflect.Type
-	rcvr   reflect.Value
-	method map[string]*methodType
-}
-
 func newService(rcvr interface{}) *service {
 	s := new(service)
 	s.rcvr = reflect.ValueOf(rcvr)
 	s.name = reflect.Indirect(s.rcvr).Type().Name()
 	s.typ = reflect.TypeOf(rcvr)
+
+	//必须要大写开头
 	if !ast.IsExported(s.name) {
 		log.Fatalf("rpc server: %s is not a valid service name", s.name)
 	}
+	//注册service方法
 	s.registerMethods()
 	return s
 }
@@ -65,12 +66,15 @@ func (s *service) registerMethods() {
 	for i := 0; i < s.typ.NumMethod(); i++ {
 		method := s.typ.Method(i)
 		mType := method.Type
+		//入参和出参个数限制
 		if mType.NumIn() != 3 || mType.NumOut() != 1 {
 			continue
 		}
+		//检查出参：必须是err返回
 		if mType.Out(0) != reflect.TypeOf((*error)(nil)).Elem() {
 			continue
 		}
+		//检查入参
 		argType, replyType := mType.In(1), mType.In(2)
 		if !isExportedOrBuiltinType(argType) || !isExportedOrBuiltinType(replyType) {
 			continue
