@@ -37,12 +37,11 @@ func (g *GobCodec) Write(h *Header, body interface{}) (err error) {
 }
 
 func (g *GobCodec) ReadBody(body interface{}) error {
-	return g.dec.Decode(&body)
+	return g.dec.Decode(body)
 }
 
 func (g *GobCodec) ReadHeader(h *Header) error {
-	log.Println("-----")
-	return g.dec.Decode(&h)
+	return g.dec.Decode(h)
 }
 
 func NewGobCodec(conn io.ReadWriteCloser) Codec {

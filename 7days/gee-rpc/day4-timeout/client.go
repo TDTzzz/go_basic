@@ -1,6 +1,7 @@
 package day4_timeout
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"time"
 )
 
 type Call struct {
@@ -37,6 +39,44 @@ type Client struct {
 
 var ErrShutdown = errors.New("connection is shut down")
 
+type clientResult struct {
+	client *Client
+	err    error
+}
+
+type newClientFunc func(conn net.Conn, opt *Option) (client *Client, err error)
+
+func dialTimeout(f newClientFunc, network, address string, opts ...*Option) (client *Client, err error) {
+	opt, err := parseOptions(opts...)
+	if err != nil {
+		return nil, err
+	}
+	conn, err := net.DialTimeout(network, address, opt.ConnectTimeout)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			_ = conn.Close()
+		}
+	}()
+	ch := make(chan clientResult)
+	go func() {
+		client, err := f(conn, opt)
+		ch <- clientResult{client: client, err: err}
+	}()
+	if opt.ConnectTimeout == 0 {
+		result := <-ch
+		return result.client, result.err
+	}
+	select {
+	case <-time.After(opt.ConnectTimeout):
+		return nil, fmt.Errorf("rpc client: connect timeout: expect within %s", opt.ConnectTimeout)
+	case result := <-ch:
+		return result.client, result.err
+	}
+}
+
 func (client *Client) Close() error {
 	client.mu.Lock()
 	defer client.mu.Unlock()
@@ -48,20 +88,7 @@ func (client *Client) Close() error {
 }
 
 func Dial(network, address string, opts ...*Option) (client *Client, err error) {
-	opt, err := parseOptions(opts...)
-	if err != nil {
-		return nil, err
-	}
-	conn, err := net.Dial(network, address)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err != nil {
-			_ = conn.Close()
-		}
-	}()
-	return NewClient(conn, opt)
+	return dialTimeout(NewClient, network, address, opts...)
 }
 
 func parseOptions(opts ...*Option) (*Option, error) {
@@ -135,9 +162,15 @@ func (client *Client) terminateCalls(err error) {
 	}
 }
 
-func (client *Client) Call(serviceMethod string, args, reply interface{}) error {
-	call := <-client.Go(serviceMethod, args, reply, make(chan *Call, 1)).Done
-	return call.Error
+func (client *Client) Call(ctx context.Context, serviceMethod string, args, reply interface{}) error {
+	call := client.Go(serviceMethod, args, reply, make(chan *Call, 1))
+	select {
+	case <-ctx.Done():
+		client.removeCall(call.Seq)
+		return errors.New("rpc client: call failed: " + ctx.Err().Error())
+	case call := <-call.Done:
+		return call.Error
+	}
 }
 
 //异步调用function
@@ -148,33 +181,38 @@ func (client *Client) Go(serviceMethod string, args, reply interface{}, done cha
 		log.Panic("rpc client：done channel is unbuffered")
 	}
 	call := &Call{
-		Seq:           0,
-		ServiceMethod: "",
-		Args:          nil,
-		Reply:         nil,
-		Error:         nil,
-		Done:          nil,
+		ServiceMethod: serviceMethod,
+		Args:          args,
+		Reply:         reply,
+		Done:          done,
 	}
 	client.send(call)
 	return call
 }
 
 func (client *Client) send(call *Call) {
+	// make sure that the client will send a complete request
 	client.sending.Lock()
 	defer client.sending.Unlock()
-	//注册call
+
+	// register this call.
 	seq, err := client.registerCall(call)
 	if err != nil {
 		call.Error = err
 		call.done()
 		return
 	}
+
+	// prepare request header
 	client.header.ServiceMethod = call.ServiceMethod
 	client.header.Seq = seq
 	client.header.Error = ""
 
+	// encode and send the request
 	if err := client.cc.Write(&client.header, call.Args); err != nil {
 		call := client.removeCall(seq)
+		// call may be nil, it usually means that Write partially failed,
+		// client has received the response and handled
 		if call != nil {
 			call.Error = err
 			call.done()

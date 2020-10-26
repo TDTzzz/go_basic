@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	day4_timeout "go_basic/7days/gee-rpc/day4-timeout"
 	"log"
 	"net"
@@ -43,19 +44,20 @@ func main() {
 		_ = client.Close()
 	}()
 
-	time.Sleep(3 * time.Second)
+	time.Sleep(time.Second)
 
 	var wg sync.WaitGroup
 	for i := 0; i < 5; i++ {
 		wg.Add(1)
-		go func() {
+		go func(i int) {
 			defer wg.Done()
 			args := &Args{Num1: i, Num2: i * i}
 			var reply int
-			if err := client.Call("Foo.Sum", args, &reply); err != nil {
+			if err := client.Call(context.Background(), "Foo.Sum", args, &reply); err != nil {
 				log.Fatal("call Foo.Sum error:", err)
 			}
 			log.Printf("%d + %d = %d", args.Num1, args.Num2, reply)
-		}()
+		}(i)
 	}
+	wg.Wait()
 }
