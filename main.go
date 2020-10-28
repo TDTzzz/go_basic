@@ -34,3 +34,4 @@ func test_recover() {
 	fmt.Println(arr[4])
 	fmt.Println("after panic")
 }
+

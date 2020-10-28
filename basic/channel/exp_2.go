@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	c := make(chan int, 10)
+	c := make(chan int, 1)
 
 	go func() {
 		for {
