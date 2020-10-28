@@ -1,10 +1,10 @@
-package day5_http
+package day6_load_balance
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"go_basic/7days/gee-rpc/day5-http/codec"
+	"go_basic/7days/gee-rpc/day6-load-balance/codec"
 	"io"
 	"log"
 	"net"
@@ -256,7 +256,7 @@ func (server *Server) HandleHTTP() {
 	log.Println("rpc server debug path:", defaultDebugPath)
 }
 
-// HandleHTTP is a convenient approach #for default server to register HTTP handlers
+// HandleHTTP is a convenient approach for default server to register HTTP handlers
 func HandleHTTP() {
 	DefaultServer.HandleHTTP()
 }
