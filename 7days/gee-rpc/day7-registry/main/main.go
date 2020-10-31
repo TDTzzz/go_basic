@@ -103,7 +103,10 @@ func main() {
 	wg.Wait()
 
 	time.Sleep(time.Second)
-	wg.Add(2)
+	wg.Add(5)
+	go startServer(registryAddr, &wg)
+	go startServer(registryAddr, &wg)
+	go startServer(registryAddr, &wg)
 	go startServer(registryAddr, &wg)
 	go startServer(registryAddr, &wg)
 	wg.Wait()
@@ -111,4 +114,5 @@ func main() {
 	time.Sleep(time.Second)
 	call(registryAddr)
 	broadcast(registryAddr)
+	time.Sleep(100 * time.Second)
 }
