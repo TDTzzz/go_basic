@@ -81,6 +81,7 @@ func maxTurbulenceSizeV2(A []int) int {
 	return ans
 }
 
+//好思路：滑动窗口
 func maxTurbulenceSizeV3(A []int) int {
 	ans, i, legt := 1, 1, len(A) //i遍历A时的索引
 	for {
