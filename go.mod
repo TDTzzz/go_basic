@@ -6,8 +6,10 @@ require (
 	github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-kit/kit v0.10.0
+	github.com/go-redsync/redsync v1.4.2
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.2
+	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/gorilla/mux v1.7.3
 	github.com/natefinch/lumberjack v2.0.0+incompatible
