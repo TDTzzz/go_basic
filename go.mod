@@ -17,6 +17,8 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/prometheus/client_golang v1.3.0
 	github.com/satori/go.uuid v1.2.0
+	github.com/tidwall/gjson v1.6.3 // indirect
+	github.com/tidwall/match v1.0.2 // indirect
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.3.0+incompatible // indirect
 	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"reflect"
 	"strings"
 )
 
@@ -22,7 +21,7 @@ func exp1() {
 	}
 	jsonData := []byte(`
     {
-        "name": "田添",
+        "name": "tt",
         "age": 23,
         "id": 999
     }`)
@@ -127,9 +126,7 @@ func exp4() {
 			fmt.Println(k, v, "(unknown)")
 		}
 	}
-	log.Println(reflect.TypeOf(v))
-	log.Println(reflect.TypeOf(data))
-	log.Println(data)
+	log.Println(v)
 }
 
 //用decoder解析数据流
