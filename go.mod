@@ -12,6 +12,7 @@ require (
 	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/gorilla/mux v1.7.3
+	github.com/marcusolsson/tui-go v0.4.0
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.8.1
