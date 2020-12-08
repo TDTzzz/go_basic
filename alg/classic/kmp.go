@@ -26,7 +26,10 @@ func getNext(p string) []int {
 		} else {
 			i = next[i]
 		}
+		log.Println(i, j, next)
+
 	}
+	log.Println(next)
 	return next
 }
 
@@ -53,6 +56,7 @@ func getNextOptimize(p string) []int {
 			i = next[i]
 		}
 	}
+	log.Println(next)
 	return next
 }
 
