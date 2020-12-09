@@ -20,35 +20,21 @@ func wiggleMaxLength(nums []int) int {
 }
 
 //贪心
-func wiggleMaxLengthV2(nums []int) int {
+func wiggleMaxLengthV3(nums []int) int {
 	if len(nums) < 2 {
 		return len(nums)
 	}
-	begin, up, down := 0, 1, 2
-	state := begin
-	maxLen := 1
-	for i := 1; i < len(nums); i++ {
-		switch state {
-		case begin:
-			if nums[i] > nums[i-1] {
-				state = up
-				maxLen++
-			} else if nums[i] < nums[i-1] {
-				state = down
-				maxLen++
-			}
-		case up:
-			if nums[i] < nums[i-1] {
-				state = down
-				maxLen++
-			}
-		case down:
-			if nums[i] > nums[i-1] {
-				state = up
-				maxLen++
-			}
+	prevdiff := nums[1] - nums[0]
+	count := 2
+	if prevdiff == 0 {
+		count = 1
+	}
+	for i := 2; i < len(nums); i++ {
+		diff := nums[i] - nums[i-1]
+		if ((diff > 0) && prevdiff <= 0) || (diff < 0 && prevdiff >= 0) {
+			count++
+			prevdiff = diff
 		}
 	}
-
-	return maxLen
+	return count
 }
