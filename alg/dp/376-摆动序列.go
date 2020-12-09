@@ -1,7 +1,26 @@
 package main
 
-//贪心
+//空间优化后的动态规划
 func wiggleMaxLength(nums []int) int {
+	if len(nums) < 2 {
+		return len(nums)
+	}
+	down, up := 1, 1
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > nums[i-1] {
+			up = down + 1
+		} else if nums[i] < nums[i-1] {
+			down = up + 1
+		}
+	}
+	if down > up {
+		return down
+	}
+	return up
+}
+
+//贪心
+func wiggleMaxLengthV2(nums []int) int {
 	if len(nums) < 2 {
 		return len(nums)
 	}
