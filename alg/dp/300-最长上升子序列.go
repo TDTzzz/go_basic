@@ -2,6 +2,13 @@ package main
 
 import "log"
 
+func main() {
+	res := []int{2, 1, 5, 3, 6, 4, 8, 9, 7}
+	//res := []int{1,2,8,6,4}
+	nn := LIS(res)
+	log.Println(nn)
+}
+
 //非最优解
 func lengthOfLISV1(nums []int) int {
 	length := len(nums)
@@ -18,6 +25,39 @@ func lengthOfLISV1(nums []int) int {
 			}
 		}
 		res = max(res, dp[i])
+	}
+	return res
+}
+
+//返回数组（牛客版本还没通过）
+func LIS(nums []int) []int {
+	length := len(nums)
+	res := make([]int, length)
+	if length == 0 {
+		return res
+	}
+	dp, maxNum := make([]int, length), 0
+
+	tmp := make([]int, 0)
+	for i := 0; i < length; i++ {
+		tmp = []int{}
+		for j := 0; j < i; j++ {
+			if nums[i] > nums[j] {
+
+				if nums[j+1] < nums[j] && nums[i] > nums[j+1] {
+					continue
+				}
+				if dp[i] < dp[j]+1 {
+					dp[i] = dp[j] + 1
+					tmp = append(tmp, nums[j])
+				}
+			}
+		}
+		tmp = append(tmp, nums[i])
+		if maxNum <= dp[i] {
+			maxNum = dp[i]
+			res = tmp
+		}
 	}
 	return res
 }
@@ -57,11 +97,4 @@ func max(i, j int) int {
 		return i
 	}
 	return j
-}
-
-func main() {
-
-	nums := []int{10, 9, 2, 5, 3, 7, 101, 18}
-	res := lengthOfLISV2(nums)
-	log.Println(res)
 }
