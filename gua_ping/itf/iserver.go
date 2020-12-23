@@ -1,4 +1,4 @@
-package zitf
+package itf
 
 //定义server的接口
 
@@ -8,6 +8,8 @@ type IServer interface {
 	Stop()
 	Serve()
 	//添加路由
-	//AddRouter()
+	AddRouter(msgId uint32, router IRouter)
+	//资源操作
+	GetConnMgr() IConnManager
 	//钩子相关
 }
