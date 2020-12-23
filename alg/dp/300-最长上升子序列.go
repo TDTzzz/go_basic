@@ -4,8 +4,10 @@ import "log"
 
 func main() {
 	res := []int{2, 1, 5, 3, 6, 4, 8, 9, 7}
-	//res := []int{1,2,8,6,4}
-	nn := LIS(res)
+	//res := []int{0, 1, 0, 3, 2, 3}
+	//res := []int{1, 2, 8, 6, 4}
+
+	nn := LISV2(res)
 	log.Println(nn)
 }
 
@@ -44,10 +46,12 @@ func LIS(nums []int) []int {
 		for j := 0; j < i; j++ {
 			if nums[i] > nums[j] {
 
-				if nums[j+1] < nums[j] && nums[i] > nums[j+1] {
-					continue
-				}
 				if dp[i] < dp[j]+1 {
+					//确保是最小的
+					if nums[j+1] < nums[j] && dp[i] < dp[j+1]+1 {
+						continue
+					}
+
 					dp[i] = dp[j] + 1
 					tmp = append(tmp, nums[j])
 				}
@@ -60,6 +64,45 @@ func LIS(nums []int) []int {
 		}
 	}
 	return res
+}
+
+func LISV2(nums []int) []int {
+	length := len(nums)
+	res := make([]int, 0)
+	maxLen := make([]int, 0)
+
+	for i := 0; i < length; i++ {
+		if i == 0 {
+			res = append(res, nums[i])
+			maxLen = append(maxLen, len(res))
+		} else {
+			if res[len(res)-1] < nums[i] {
+				res = append(res, nums[i])
+				maxLen = append(maxLen, len(res))
+			} else {
+				for j := 0; j < len(res); j++ {
+					if res[j] > nums[i] {
+						res[j] = nums[i]
+						maxLen = append(maxLen, j+1)
+						break
+					}
+				}
+			}
+
+		}
+	}
+
+	resArray := make([]int, len(res))
+
+	//从后往前遍历
+	j := len(res)
+	for i := length - 1; j > 0; i-- {
+		if maxLen[i] == j {
+			j -= 1
+			resArray[j] = nums[i]
+		}
+	}
+	return resArray
 }
 
 //贪心+二分
