@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go_basic/gua_ping/itf"
 	"go_basic/gua_ping/net"
+	"log"
 )
 
 //自定义路由
@@ -14,6 +15,8 @@ type PingRouter struct {
 
 func (router *PingRouter) Handle(request itf.IRequest) {
 	fmt.Println("Call PingRouter Handle")
+
+	log.Println("recv from client : msgId=", request.GetMsgID(), ", data=", string(request.GetData()))
 
 	err := request.GetConnection().SendBuffMsg(0, []byte("test...ping"))
 	if err != nil {

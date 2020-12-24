@@ -12,4 +12,6 @@ type IServer interface {
 	//资源操作
 	GetConnMgr() IConnManager
 	//钩子相关
+	CallOnConnStart(conn IConnection)
+	CallOnConnStop(conn IConnection)
 }

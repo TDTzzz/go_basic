@@ -8,13 +8,13 @@ type Request struct {
 }
 
 func (r *Request) GetConnection() itf.IConnection {
-	panic("implement me")
+	return r.conn
 }
 
 func (r *Request) GetData() []byte {
-	panic("implement me")
+	return r.msg.GetData()
 }
 
 func (r *Request) GetMsgID() uint32 {
-	panic("implement me")
+	return r.msg.GetMsgId()
 }

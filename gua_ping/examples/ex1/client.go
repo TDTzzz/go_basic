@@ -20,26 +20,30 @@ func main() {
 	for {
 		//发封包消息
 		dp := net2.NewDataPack()
-		msg, _ := dp.Pack(net2.NewMsgPackage(0, []byte("Client aaa!!!!!!!")))
+		msg, _ := dp.Pack(net2.NewMsgPackage(0, []byte("Gua Ping Client Test Message!!!!!!")))
 		_, err := conn.Write(msg)
 		if err != nil {
 			fmt.Println("write error err", err)
 			return
 		}
-
 		//先读head
+		fmt.Println("1111")
 		headData := make([]byte, dp.GetHeadLen())
+		fmt.Println("22222")
 		_, err = io.ReadFull(conn, headData)
+		fmt.Println("3333")
 		if err != nil {
-			fmt.Println("read head error")
+			fmt.Println("read head error",err)
 			break
 		}
+		fmt.Println("headData:", headData)
 
 		msgHead, err := dp.Unpack(headData)
 		if err != nil {
 			fmt.Println("server unpack err:", err)
 			return
 		}
+		fmt.Println("-------")
 		if msgHead.GetDataLen() > 0 {
 			msg := msgHead.(*net2.Message)
 			msg.Data = make([]byte, msg.GetDataLen())
@@ -51,6 +55,6 @@ func main() {
 			}
 			fmt.Println("==> Recv Msg: ID=", msg.Id, ", len=", msg.DataLen, ", data=", string(msg.Data))
 		}
+		time.Sleep(1 * time.Second)
 	}
-	time.Sleep(1 * time.Second)
 }

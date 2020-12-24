@@ -41,6 +41,23 @@ type Server struct {
 	ConnMgr    itf.IConnManager
 	msgHandler itf.IMsgHandler
 	//钩子函数
+	OnConnStart func(conn itf.IConnection)
+	//该Server的连接断开时的Hook函数
+	OnConnStop func(conn itf.IConnection)
+}
+
+func (s *Server) CallOnConnStart(conn itf.IConnection) {
+	if s.OnConnStart != nil {
+		fmt.Println("---> CallOnConnStart....")
+		s.OnConnStart(conn)
+	}
+}
+
+func (s *Server) CallOnConnStop(conn itf.IConnection) {
+	if s.OnConnStop != nil {
+		fmt.Println("---> CallOnConnStop....")
+		s.OnConnStop(conn)
+	}
 }
 
 func (s *Server) GetConnMgr() itf.IConnManager {
@@ -56,7 +73,6 @@ func (s *Server) Start() {
 	fmt.Printf("[START] Server name %s,listener at IP:%s,Port %d is starting\n", s.Name, s.IP, s.Port)
 
 	go func() {
-
 		//1.获得一个TCP的Addr
 		addr, err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {
@@ -98,7 +114,7 @@ func (s *Server) Stop() {
 //运行服务
 func (s *Server) Serve() {
 	s.Start()
-	
+
 	select {} //阻塞
 }
 

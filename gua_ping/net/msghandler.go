@@ -15,8 +15,8 @@ type MsgHandler struct {
 	TaskQueue []chan itf.IRequest
 }
 
-func (m MsgHandler) DoMsgHandler(request itf.IRequest) {
-	handler, ok := m.Apis[request.GetMsgID()]
+func (mh *MsgHandler) DoMsgHandler(request itf.IRequest) {
+	handler, ok := mh.Apis[request.GetMsgID()]
 	if !ok {
 		fmt.Println("api msgId = ", request.GetMsgID(), " is not FOUND!")
 		return

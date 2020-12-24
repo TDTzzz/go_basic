@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"go_basic/gua_ping/itf"
-	"go_basic/gua_ping/utils"
 	"io"
+	"log"
 	"net"
 	"sync"
 )
@@ -17,7 +17,8 @@ type Connection struct {
 	ConnID     uint32
 	MsgHandler itf.IMsgHandler
 
-	ctx context.Context
+	ctx    context.Context
+	cancel context.CancelFunc
 	sync.RWMutex
 
 	//消息管道
@@ -61,7 +62,9 @@ func (c *Connection) SendBuffMsg(msgId uint32, data []byte) error {
 		fmt.Println("Pack error msg id = ", msgId)
 		return errors.New("Pack error msg ")
 	}
+	log.Println("send-buff-data:", string(data))
 	c.msgBuffChan <- msg
+	log.Println("send-buff-data okk!!")
 	return nil
 }
 
@@ -70,11 +73,11 @@ func (c *Connection) RemoteAddr() net.Addr {
 }
 
 func (c *Connection) Start() {
-
+	c.ctx, c.cancel = context.WithCancel(context.Background())
 	go c.StartReader()
 	go c.StartWriter()
-
 	//执行钩子
+	c.TcpServer.CallOnConnStart(c)
 }
 
 func (c *Connection) StartReader() {
@@ -119,19 +122,47 @@ func (c *Connection) StartReader() {
 				msg:  msg,
 			}
 
-			if utils.GlobalObj.WorkerPoolSize > 0 {
-				//交给worker处理,非阻塞
+			go c.MsgHandler.DoMsgHandler(&req)
 
-			} else {
-				go c.MsgHandler.DoMsgHandler(&req)
-			}
-
+			//if utils.GlobalObj.WorkerPoolSize > 0 {
+			//	//交给worker处理,非阻塞
+			//} else {
+			//	go c.MsgHandler.DoMsgHandler(&req)
+			//}
 		}
 	}
 }
 
+//写消息goroutine
 func (c *Connection) StartWriter() {
+	fmt.Println("[Writer Goroutine is running]")
+	defer fmt.Println(c.RemoteAddr().String(), "[conn Writer exit!]")
 
+	for {
+		fmt.Println("[Writer Goroutine is running]!!!!!!")
+		select {
+		case data := <-c.msgChan:
+			fmt.Println("MSG:", data)
+			if _, err := c.Conn.Write(data); err != nil {
+				fmt.Println("Send Data error:, ", err, " Conn Writer exit")
+				return
+			}
+
+		case data, ok := <-c.msgBuffChan:
+			fmt.Println("BuffMSG:", data)
+			if ok {
+				if _, err := c.Conn.Write(data); err != nil {
+					fmt.Println("Send Buff Data error:, ", err, " Conn Writer exit")
+					return
+				}
+			} else {
+				fmt.Println("msgBuffChan is Closed")
+				break
+			}
+		case <-c.ctx.Done():
+			return
+		}
+	}
 }
 
 func (c *Connection) Stop() {
