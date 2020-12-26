@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go_basic/gua_ping/itf"
+	"go_basic/gua_ping/utils"
 	"io"
 	"log"
 	"net"
@@ -149,7 +150,6 @@ func (c *Connection) StartWriter() {
 			}
 
 		case data, ok := <-c.msgBuffChan:
-			fmt.Println("BuffMSG:", data)
 			if ok {
 				if _, err := c.Conn.Write(data); err != nil {
 					fmt.Println("Send Buff Data error:, ", err, " Conn Writer exit")
@@ -198,10 +198,12 @@ func (c *Connection) GetConnID() uint32 {
 
 func NewConnection(server itf.IServer, conn *net.TCPConn, connID uint32, msgHandler itf.IMsgHandler) *Connection {
 	c := &Connection{
-		TcpServer:  server,
-		Conn:       conn,
-		ConnID:     connID,
-		MsgHandler: msgHandler,
+		TcpServer:   server,
+		Conn:        conn,
+		ConnID:      connID,
+		MsgHandler:  msgHandler,
+		msgChan:     make(chan []byte),
+		msgBuffChan: make(chan []byte, utils.GlobalObj.MaxMsgChanLen),
 	}
 	//将这个新建的Conn绑定到链接管理中
 	c.TcpServer.GetConnMgr().Add(c)

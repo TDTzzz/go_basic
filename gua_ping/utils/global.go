@@ -11,6 +11,7 @@ type Global struct {
 	//
 	WorkerPoolSize uint32
 	MaxPacketSize  uint32
+	MaxMsgChanLen  uint32 //SendMsgMsg发送消息的缓冲最大长度
 }
 
 //定义一个全局对象
@@ -28,6 +29,7 @@ func init() {
 		TcpPort:        8999,
 		WorkerPoolSize: 10,
 		MaxPacketSize:  4096,
+		MaxMsgChanLen:  1024,
 	}
 
 	//从配置文件里加载一些用户配置

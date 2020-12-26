@@ -27,23 +27,18 @@ func main() {
 			return
 		}
 		//先读head
-		fmt.Println("1111")
 		headData := make([]byte, dp.GetHeadLen())
-		fmt.Println("22222")
 		_, err = io.ReadFull(conn, headData)
-		fmt.Println("3333")
 		if err != nil {
 			fmt.Println("read head error",err)
 			break
 		}
-		fmt.Println("headData:", headData)
 
 		msgHead, err := dp.Unpack(headData)
 		if err != nil {
 			fmt.Println("server unpack err:", err)
 			return
 		}
-		fmt.Println("-------")
 		if msgHead.GetDataLen() > 0 {
 			msg := msgHead.(*net2.Message)
 			msg.Data = make([]byte, msg.GetDataLen())
