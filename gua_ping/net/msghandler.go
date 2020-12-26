@@ -37,12 +37,31 @@ func (mh *MsgHandler) AddRouter(msgId uint32, router itf.IRouter) {
 	fmt.Println("Add api msgId = ", msgId)
 }
 
-func (m *MsgHandler) StartWorkerPool() {
-	panic("implement me")
+//启动worker工作池
+func (mh *MsgHandler) StartWorkerPool() {
+	for i := 0; i < int(mh.WorkerPoolSize); i++ {
+		mh.TaskQueue[i] = make(chan itf.IRequest, utils.GlobalObj.MaxWorkerTaskLen)
+		go mh.StartOnWorker(i, mh.TaskQueue[i])
+	}
 }
 
-func (m *MsgHandler) SendMsgToTaskQueue(request itf.IRequest) {
-	panic("implement me")
+//启动一个Worker工作流程
+func (mh *MsgHandler) StartOnWorker(workerID int, taskQueue chan itf.IRequest) {
+	fmt.Println("Worker ID = ", workerID, " is started.")
+
+	for {
+		select {
+		case request := <-taskQueue:
+			mh.DoMsgHandler(request)
+		}
+	}
+}
+
+func (mh *MsgHandler) SendMsgToTaskQueue(request itf.IRequest) {
+	//得到需处理此条连接的WorkerID
+	workerID := request.GetConnection().GetConnID() % mh.WorkerPoolSize
+	//将请求消息发给任务队列
+	mh.TaskQueue[workerID] <- request
 }
 
 func NewMsgHandler() *MsgHandler {

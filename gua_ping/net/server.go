@@ -72,7 +72,12 @@ func (s *Server) AddRouter(msgId uint32, router itf.IRouter) {
 func (s *Server) Start() {
 	fmt.Printf("[START] Server name %s,listener at IP:%s,Port %d is starting\n", s.Name, s.IP, s.Port)
 
+
 	go func() {
+
+		//启动worker工作机制
+		s.msgHandler.StartWorkerPool()
+
 		//1.获得一个TCP的Addr
 		addr, err := net.ResolveTCPAddr(s.IPVersion, fmt.Sprintf("%s:%d", s.IP, s.Port))
 		if err != nil {

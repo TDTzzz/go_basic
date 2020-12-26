@@ -123,13 +123,12 @@ func (c *Connection) StartReader() {
 				msg:  msg,
 			}
 
-			go c.MsgHandler.DoMsgHandler(&req)
-
-			//if utils.GlobalObj.WorkerPoolSize > 0 {
-			//	//交给worker处理,非阻塞
-			//} else {
-			//	go c.MsgHandler.DoMsgHandler(&req)
-			//}
+			if utils.GlobalObj.WorkerPoolSize > 0 {
+				//交给worker处理,非阻塞
+				c.MsgHandler.SendMsgToTaskQueue(&req)
+			} else {
+				go c.MsgHandler.DoMsgHandler(&req)
+			}
 		}
 	}
 }
