@@ -1,4 +1,4 @@
-package main
+package backtrack
 
 func permute(nums []int) [][]int {
 	if len(nums) == 1 {
