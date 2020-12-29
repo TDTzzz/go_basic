@@ -1,7 +1,6 @@
 package gee
 
 import (
-	"log"
 	"net/http"
 	"strings"
 )
@@ -41,7 +40,6 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 	}
 	n := root.search(searchParts, 0)
 
-	log.Println("---", n)
 	if n != nil {
 		parts := parsePattern(n.pattern)
 		for index, part := range parts {
