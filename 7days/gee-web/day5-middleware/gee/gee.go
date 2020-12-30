@@ -51,6 +51,8 @@ func (group *RouterGroup) addRoute(method string, comp string, handler HandlerFu
 	pattern := group.prefix + comp
 	log.Printf("Route %4s - %s", method, pattern)
 	group.engine.router.addRouter(method, pattern, handler)
+	log.Println("roots:", group.engine.router.roots)
+	log.Println("handlers:", group.engine.router.handlers)
 }
 
 // GET defines the method to add GET request

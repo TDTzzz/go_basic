@@ -90,7 +90,7 @@ func (r *router) getRoutes(method string) []*node {
 
 func (r *router) handle(c *Context) {
 	n, params := r.getRoute(c.Method, c.Path)
-
+	log.Println("selectNode:", n)
 	if n != nil {
 		c.Params = params
 		key := c.Method + "-" + n.pattern
@@ -103,28 +103,33 @@ func (r *router) handle(c *Context) {
 
 //遍历children
 func (r *router) WatchChildren() {
-
 	for k, v := range r.handlers {
-		log.Println(k, v)
+		log.Println("handler:", k, v)
 	}
+	fmt.Println()
 	for k, v := range r.roots {
-		log.Println("遍历root", k, v)
-		traversalChildren(v.children, 0)
+		log.Println("METHOD", k)
+		log.Println("Node.Pattern:", v.pattern, "  Part:", v.part, " isWild:", v.isWild, " Children:", v.children)
+		fmt.Println()
+		traversalChildren(v, v.children, 0)
 	}
 }
 
-func traversalChildren(children []*node, height int) {
+func traversalChildren(dad *node, children []*node, height int) {
+	fmt.Println("DadNode:", dad)
+
 	if children == nil {
 		log.Println("end")
 	} else {
 		for _, v := range children {
-			fmt.Println("children--", "pattern:"+v.pattern, "---", "part:"+v.part, "---", height)
-
-			fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "pattern  ", v.pattern, 0x1B)
-			fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "part  ", v.part, 0x1B)
-			fmt.Printf("%c[0;47;32m%s%d%c[0m\n", 0x1B, "height  ", height, 0x1B)
+			//fmt.Println("children--", "pattern:"+v.pattern, "---", "part:"+v.part, "---height:", height)
+			//fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "pattern  ", v.pattern, 0x1B)
+			//fmt.Printf("%c[0;47;32m%s%s%c[0m\n", 0x1B, "part  ", v.part, 0x1B)
+			//fmt.Printf("%c[0;47;32m%s%d%c[0m\n", 0x1B, "height  ", height, 0x1B)
+			//fmt.Println()
+			fmt.Println("Children:", v, "--height:", height, "---Dad:", dad)
 			fmt.Println()
-			traversalChildren(v.children, height+1)
+			traversalChildren(v, v.children, height+1)
 		}
 	}
 }

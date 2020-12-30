@@ -3,7 +3,7 @@ package main
 func lengthOfLongestSubstring(s string) (res int) {
 	window := make(map[string]int)
 	left, right := 0, 0
-	
+
 	for right < len(s) {
 		c := string(s[right])
 		right++

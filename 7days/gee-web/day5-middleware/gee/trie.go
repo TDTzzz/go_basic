@@ -2,6 +2,7 @@ package gee
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -17,8 +18,11 @@ func (n *node) String() string {
 }
 
 func (n *node) insert(pattern string, parts []string, height int) {
+	log.Println("node:", n)
+
 	if len(parts) == height {
 		n.pattern = pattern
+		log.Println("node22:", n)
 		return
 	}
 	//当前part
@@ -32,6 +36,10 @@ func (n *node) insert(pattern string, parts []string, height int) {
 		}
 		n.children = append(n.children, child)
 	}
+	log.Println("pattern:", pattern)
+	log.Println("parts:", parts)
+	log.Println("height:", height)
+	log.Println("child:", child)
 	child.insert(pattern, parts, height+1)
 }
 
@@ -46,7 +54,7 @@ func (n *node) search(parts []string, height int) *node {
 
 	part := parts[height]
 	children := n.matchChildren(part)
-
+	log.Println("children:", children, "part:", part)
 	for _, child := range children {
 		result := child.search(parts, height+1)
 		if result != nil {
@@ -69,7 +77,6 @@ func (n *node) matchChild(part string) *node {
 func (n *node) matchChildren(part string) []*node {
 	nodes := make([]*node, 0)
 	for _, child := range n.children {
-
 		if child.part == part || child.isWild {
 			nodes = append(nodes, child)
 		}

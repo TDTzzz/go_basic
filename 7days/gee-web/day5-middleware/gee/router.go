@@ -1,6 +1,7 @@
 package gee
 
 import (
+	"log"
 	"net/http"
 	"strings"
 )
@@ -31,7 +32,7 @@ func (r *router) addRouter(method string, pattern string, handler HandlerFunc) {
 
 func (r *router) getRoute(method string, path string) (*node, map[string]string) {
 	searchParts := parsePattern(path)
-
+	log.Println("searchParts:", searchParts)
 	params := make(map[string]string)
 	root, ok := r.roots[method]
 
@@ -39,9 +40,12 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 		return nil, nil
 	}
 	n := root.search(searchParts, 0)
+	log.Println("searchPartsNode:", n)
 
 	if n != nil {
 		parts := parsePattern(n.pattern)
+		log.Println("parts:", parts)
+
 		for index, part := range parts {
 			if part[0] == ':' {
 				params[part[1:]] = searchParts[index]
@@ -51,6 +55,8 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 				break
 			}
 		}
+		log.Println("params:", params)
+
 		return n, params
 	}
 	return nil, nil
@@ -82,5 +88,5 @@ func parsePattern(pattern string) []string {
 			}
 		}
 	}
-	return nil
+	return parts
 }
