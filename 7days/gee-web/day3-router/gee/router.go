@@ -116,10 +116,11 @@ func (r *router) WatchChildren() {
 }
 
 func traversalChildren(dad *node, children []*node, height int) {
-	fmt.Println("DadNode:", dad)
+	fmt.Println("CurrentNode:", dad)
 
 	if children == nil {
 		log.Println("end")
+		fmt.Println("------")
 	} else {
 		for _, v := range children {
 			//fmt.Println("children--", "pattern:"+v.pattern, "---", "part:"+v.part, "---height:", height)

@@ -71,6 +71,102 @@ func maxSubArray(nums []int) int {
 	return res
 }
 
+//LCS 最长公共子序列
+func lcs(s, t []int) int {
+	l := len(s)
+	w := len(t)
+
+	dp := make([][]int, l+1)
+	for i := 0; i <= l; i++ {
+		dp[i] = make([]int, w+1)
+	}
+
+	for i := 1; i <= l; i++ {
+		for j := 1; j <= w; j++ {
+			if s[i-1] == t[j-1] {
+				dp[i][j] = dp[i-1][j-1] + 1
+			} else {
+				dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+			}
+		}
+	}
+	return dp[l][w]
+}
+
+//lcs状态压缩
+func lcsV2(s, t []int) int {
+	dp := make([]int, len(t)+1)
+
+	for i := 1; i <= len(s); i++ {
+		last := 0 //j=1时重置"左上角"的值
+		for j := 1; j <= len(t); j++ {
+			tmp := dp[j] //相当于dp[i-1][j]
+			if s[i-1] == t[j-1] {
+				dp[j] = last + 1
+			} else {
+				dp[j] = max(tmp, dp[j-1])
+			}
+			last = tmp
+		}
+	}
+	return dp[len(t)]
+}
+
+//最长回文子序列
+func lps(s string) int {
+	l := len(s)
+	dp := make([][]int, l+1)
+	for i := 0; i <= l; i++ {
+		dp[i] = make([]int, l+1)
+	}
+
+	//反着遍历
+	for i := l - 1; i >= 0; i-- {
+		dp[i][i] = 1
+		for j := i + 1; j < l; j++ {
+			if s[i] == s[j] {
+				dp[i][j] = dp[i+1][j-1] + 2
+			} else {
+				dp[i][j] = max(dp[i+1][j], dp[i][j-1])
+			}
+		}
+	}
+
+	//试着正着遍历一下
+	//dp[0][0] = 1
+	//for i := 1; i < l; i++ {
+	//	dp[i][i] = 1
+	//	for j := i - 1; j >= 0; j-- {
+	//		if s[i] == s[j] {
+	//			dp[j][i] = dp[j+1][i-1] + 2
+	//		} else {
+	//			dp[j][i] = max(dp[j][j-1], dp[j+1][i])
+	//		}
+	//	}
+	//}
+	return dp[0][l-1]
+}
+
+//以最小插入次数构造回文串
+func minInsertions(s string) int {
+	l := len(s)
+	dp := make([][]int, l+1)
+	for i := 0; i <= l; i++ {
+		dp[i] = make([]int, l+1)
+	}
+
+	for i := l - 2; i >= 0; i-- {
+		for j := i + 1; j < l; j++ {
+			if s[i] == s[j] {
+				dp[i][j] = dp[i+1][j-1]
+			} else {
+				dp[i][j] = min(dp[i+1][j], dp[i][j-1]) + 1
+			}
+		}
+	}
+	return dp[0][l-1]
+}
+
 //辅助函数
 func min(x, y int) int {
 	if x < y {

@@ -21,7 +21,6 @@ func (n *node) insert(pattern string, parts []string, height int) {
 		n.pattern = pattern
 		return
 	}
-
 	part := parts[height]
 	child := n.matchChild(part)
 
@@ -32,6 +31,7 @@ func (n *node) insert(pattern string, parts []string, height int) {
 		}
 		n.children = append(n.children, child)
 	}
+	//不为空代表已存在
 	child.insert(pattern, parts, height+1)
 }
 
