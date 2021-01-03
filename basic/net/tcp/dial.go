@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	//conn, err := net.Dial("tcp", "192.0.32.10:80") // tcp ipv4
 	conn, err := net.Dial("tcp", "192.0.32.10:80") // tcp ipv4
 	checkConnection(conn, err)
 	conn, err = net.Dial("udp", "192.0.32.10:80") // udp
