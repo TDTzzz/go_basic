@@ -33,7 +33,7 @@ func detectCycle(head *ListNode) *ListNode {
 	return fast
 }
 
-func detectCycle(head *ListNode) *ListNode {
+func detectCycleV2(head *ListNode) *ListNode {
 	if head == nil || head.Next == nil {
 		return nil
 	}
