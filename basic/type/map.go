@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"sort"
 )
 
 //var map1 map[keytype]valuetype
@@ -12,9 +14,10 @@ import (
 //3.map容量:和数组不同，map 可以根据新增的 key-value 对动态的伸缩，因此它不存在固定长度或者最大限制。
 //4.但是你也可以选择标明 map 的初始容量 capacity，就像这样：make(map[keytype]valuetype，cap)。
 func main() {
-	badCase()
-	case1()
-	case2()
+	test()
+	//badCase()
+	//case1()
+	//case2()
 }
 
 //对一个nil的slice添加元素没问题
@@ -47,4 +50,33 @@ func badCase() {
 	mapCreated := new(map[string]float32)
 	log.Println(mapCreated, &mapCreated)
 	//mapCreated["ss"] = 33.33
+}
+
+func test() {
+	//intList := []int{2, 4, 3, 5, 7, 6, 9, 8, 1, 0}
+	//sort.Ints(intList)
+	//log.Println(intList)
+
+	barVal := map[string]int{"alpha": 34, "bravo": 56, "charlie": 23,
+		"delta": 87, "echo": 56, "foxtrot": 12,
+		"golf": 34, "hotel": 16, "indio": 87,
+		"juliet": 65, "kili": 43, "lima": 98}
+
+	fmt.Println("unsorted:")
+	for k, v := range barVal {
+		fmt.Printf("Key: %v, Value: %v / ", k, v)
+	}
+	keys := make([]string, len(barVal))
+	i := 0
+	for k, _ := range barVal {
+		keys[i] = k
+		i++
+	}
+	sort.Strings(keys)
+	fmt.Println()
+	fmt.Println("sorted:")
+	for _, k := range keys {
+		fmt.Printf("Key: %v, Value: %v / ", k, barVal[k])
+	}
+
 }

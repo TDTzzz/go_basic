@@ -109,7 +109,7 @@ func levelOrder(root *TreeNode) (res [][]int) {
 	return
 }
 
-//a全排列
+//全排列
 func permute(nums []int) [][]int {
 	res := [][]int{}
 	visited := map[int]bool{}
@@ -136,4 +136,24 @@ func permute(nums []int) [][]int {
 	}
 	dfs([]int{})
 	return res
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//反转链表
+func reverseList(head *ListNode) *ListNode {
+	var prev *ListNode
+	curr := head
+
+	for curr != nil {
+		tmp := curr.Next
+		curr.Next = prev
+		prev = curr
+		curr = tmp
+	}
+
+	return curr
 }

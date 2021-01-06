@@ -3,11 +3,12 @@ package main
 import "log"
 
 func main() {
-	//res := []int{1, 2, 3, 4, 5, 6}
-	res := []int{6, 5, 4, 3, 2, 1}
+	res := []int{1, 2, 3}
+	//res := []int{6, 5, 4, 3, 2, 1}
 	//res = quickSort(res)
-	res = heapSort(res)
-	log.Println(res)
+	//res = heapSort(res)
+	res2 := permutation(res)
+	log.Println(res2)
 }
 
 func quickSort(nums []int) []int {
@@ -64,4 +65,36 @@ func heap_help(nums []int, dad int, end int) {
 		nums[dad], nums[son] = nums[son], nums[dad]
 	}
 	heap_help(nums, son, end)
+}
+
+//全排列
+func permutation(nums []int) [][]int {
+	res := make([][]int, 0)
+	visited := map[int]bool{}
+
+	var dfs func(path []int)
+	dfs = func(path []int) {
+		if len(path) == len(nums) {
+			temp := make([]int, len(path))
+			copy(temp, path)
+			res = append(res, path)
+		}
+		for _, n := range nums {
+			if visited[n] {
+				continue
+			}
+			path = append(path, n)
+			visited[n] = true
+			dfs(path)
+			path = path[:len(path)-1]
+			visited[n] = false
+		}
+	}
+	dfs([]int{})
+	return res
+}
+
+//
+func test(nums []int) {
+
 }
