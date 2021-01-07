@@ -3,12 +3,13 @@ package main
 import "log"
 
 func main() {
-	res := []int{1, 2, 3}
-	//res := []int{6, 5, 4, 3, 2, 1}
+	//res := []int{1, 2, 3}
+	res := []int{6, 5, 4, 3, 2, 1}
+	res = MergeSort(res)
 	//res = quickSort(res)
 	//res = heapSort(res)
-	res2 := permutation(res)
-	log.Println(res2)
+	//res2 := permutation(res)
+	log.Println(res)
 }
 
 func quickSort(nums []int) []int {
@@ -94,7 +95,36 @@ func permutation(nums []int) [][]int {
 	return res
 }
 
-//
-func test(nums []int) {
+//归并排序
+func merge(left []int, right []int) []int {
+	i, j := 0, 0
+	newArr := make([]int, 0)
+	for i < len(left) && j < len(right) {
+		if left[i] > right[j] {
+			newArr = append(newArr, right[j])
+			j++
+		} else {
+			newArr = append(newArr, left[i])
+			i++
+		}
+	}
+	//两边还有剩余
+	if i < len(left) {
+		newArr = append(newArr, left[i:]...)
+	}
+	if j < len(right) {
+		newArr = append(newArr, left[j:]...)
+	}
+	return newArr
+}
 
+func MergeSort(arr []int) []int {
+	n := len(arr)
+	if n < 2 {
+		return arr
+	}
+	key := n / 2
+	left := MergeSort(arr[:key])
+	right := MergeSort(arr[key:])
+	return merge(left, right)
 }

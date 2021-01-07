@@ -1,15 +1,10 @@
 package main
 
-import "log"
+import (
+	"fmt"
+)
 
 //练手
-
-func main() {
-	nums := []int{1, 2, 3}
-
-	res := permute(nums)
-	log.Println(res)
-}
 
 /**
  * Definition for a binary tree node.
@@ -156,4 +151,12 @@ func reverseList(head *ListNode) *ListNode {
 	}
 
 	return curr
+}
+
+func main() {
+	s3 := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	s4 := s3[3:6]
+	fmt.Printf("The length of s4: %d\n", len(s4))
+	fmt.Printf("The capacity of s4: %d\n", cap(s4))
+	fmt.Printf("The value of s4: %d\n", s4)
 }
