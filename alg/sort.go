@@ -4,12 +4,10 @@ import "log"
 
 func main() {
 	//res := []int{1, 2, 3}
-	res := []int{6, 5, 4, 3, 2, 1}
-	res = MergeSort(res)
-	//res = quickSort(res)
-	//res = heapSort(res)
-	//res2 := permutation(res)
-	log.Println(res)
+	res := []int{4, 3, 5, 2, 1}
+	res2 := selectTop2(res)
+
+	log.Println(res2)
 }
 
 func quickSort(nums []int) []int {
@@ -39,33 +37,32 @@ func quickSort(nums []int) []int {
 	return nums
 }
 
-func heapSort(nums []int) []int {
-	//先构造最大堆
-	for i := len(nums) / 2; i >= 0; i-- {
-		heap_help(nums, i, len(nums)-1)
+
+
+//On求数组第二大的数，用栈思想
+func selectTop2(nums []int) int {
+	var top, second int
+	if nums[0] > nums[1] {
+		top = nums[0]
+		second = nums[1]
+	} else {
+		top = nums[1]
+		second = nums[0]
 	}
 
-	//取数
-	for i := len(nums) - 1; i > 0; i-- {
-		nums[0], nums[i] = nums[i], nums[0]
-		heap_help(nums, 0, i-1)
-	}
-	return nums
-}
+	for i := 2; i < len(nums); i++ {
+		curr := nums[i]
+		if curr > top {
+			second = top
+			top = curr
+			continue
+		}
 
-func heap_help(nums []int, dad int, end int) {
-	son := 2*dad + 1
-	if son > end {
-		return
+		if curr > second {
+			second = curr
+		}
 	}
-	if son+1 <= end && nums[son+1] > nums[son] {
-		son++
-	}
-
-	if nums[dad] < nums[son] {
-		nums[dad], nums[son] = nums[son], nums[dad]
-	}
-	heap_help(nums, son, end)
+	return second
 }
 
 //全排列
