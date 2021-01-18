@@ -37,8 +37,6 @@ func quickSort(nums []int) []int {
 	return nums
 }
 
-
-
 //On求数组第二大的数，用栈思想
 func selectTop2(nums []int) int {
 	var top, second int
@@ -124,4 +122,18 @@ func MergeSort(arr []int) []int {
 	left := MergeSort(arr[:key])
 	right := MergeSort(arr[key:])
 	return merge(left, right)
+}
+
+//
+func test3(nums []int, dad int, end int) {
+	son := 2*dad + 1
+	if nums[son+1] > nums[son] {
+		son++
+	}
+
+	if nums[dad] < nums[son] {
+		nums[dad], nums[son] = nums[son], nums[dad]
+	}
+
+	test3(nums, son, end)
 }

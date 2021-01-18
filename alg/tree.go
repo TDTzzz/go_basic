@@ -1,12 +1,6 @@
 package main
 
-func pre(root *TreeNode) (res []int) {
 
-}
-
-func inorder(root *TreeNode) (res []int) {
-
-}
 
 func postorder(root *TreeNode) (res []int) {
 	stk := make([]*TreeNode, 0)
