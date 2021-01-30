@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"strconv"
+	"strings"
 )
 
 //练手
@@ -154,9 +156,120 @@ func reverseList(head *ListNode) *ListNode {
 }
 
 func main() {
-	s3 := []int{1, 2, 3, 4, 5, 6, 7, 8}
-	s4 := s3[3:6]
-	fmt.Printf("The length of s4: %d\n", len(s4))
-	fmt.Printf("The capacity of s4: %d\n", cap(s4))
-	fmt.Printf("The value of s4: %d\n", s4)
+	//s3 := []int{1, 2, 3, 4, 5, 6, 7, 8}
+	//s4 := s3[3:6]
+	//fmt.Printf("The length of s4: %d\n", len(s4))
+	//fmt.Printf("The capacity of s4: %d\n", cap(s4))
+	//fmt.Printf("The value of s4: %d\n", s4)
+
+	//测试字符串转化
+	//s := "1234"
+	//res := int(s[1] - '0')
+	//log.Println(reflect.TypeOf(res).String())
+
+	res := addString("11111", "22222222")
+	log.Println(res)
+}
+
+//层序遍历
+
+func levelOrder2(root *TreeNode) [][]int {
+	if root == nil {
+		return nil
+	}
+	res := make([][]int, 0)
+	p := []*TreeNode{root}
+
+	for level := 0; len(p) > 0; level++ {
+		q := []*TreeNode{}
+		for i := 0; i < len(p); i++ {
+			curr := p[i]
+			res[level] = append(res[level], curr.Val)
+			if curr.Left != nil {
+				q = append(q, curr.Left)
+			}
+			if curr.Right != nil {
+				q = append(q, curr.Right)
+			}
+		}
+		p = q
+	}
+	return res
+}
+
+//反转链表
+func reverseListNode(node *ListNode) *ListNode {
+	var prev *ListNode
+	curr := node
+
+	for curr != nil {
+		tmp := curr.Next
+		curr.Next = prev
+		prev = curr
+		curr = tmp
+	}
+
+	return prev
+}
+
+//环形链表
+func hasCycle(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return false
+	}
+	slow, fast := head, head.Next
+	for fast != slow {
+		if fast == nil || fast.Next == nil {
+			return false
+		}
+		slow = slow.Next
+		fast = fast.Next.Next
+
+	}
+	return true
+}
+
+//环形链表2
+func detectCycle(head *ListNode) {
+
+}
+
+//大数相加
+func addString(s1, s2 string) string {
+	res := make([]string, 0)
+
+	flag := 0
+	l1, l2 := len(s1), len(s2)
+
+	for i, j := l1-1, l2-1; i >= 0 || j >= 0; i, j = i-1, j-1 {
+		currNum1 := 0
+		currNum2 := 0
+
+		if i < 0 {
+			currNum1 = 0
+		} else {
+			currNum1 = int(s1[i] - '0')
+		}
+		if j < 0 {
+			currNum2 = 0
+		} else {
+			currNum2 = int(s2[j] - '0')
+		}
+
+		currSum := (currNum1 + currNum2 + flag) % 10
+		sumStr := strconv.Itoa(currSum)
+		res = append(res, sumStr)
+		flag = (currNum1 + currNum2 + flag) / 10
+		log.Println(res)
+	}
+	return reverse(strings.Join(res, ""))
+}
+
+//字符串翻转
+func reverse(str string) string {
+	tmp := []byte(str)
+	for i, j := 0, len(tmp)-1; i < j; i, j = i+1, j-1 {
+		tmp[i], tmp[j] = tmp[j], tmp[i]
+	}
+	return string(tmp)
 }

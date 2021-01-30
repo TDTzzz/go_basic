@@ -181,3 +181,8 @@ func max(x, y int) int {
 	}
 	return y
 }
+
+//lcs
+func test(s, t []int) int {
+
+}

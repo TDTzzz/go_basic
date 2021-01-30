@@ -1,7 +1,6 @@
 package main
 
 //HASH+双向链表
-
 type LRUCache struct {
 	size       int
 	capacity   int
