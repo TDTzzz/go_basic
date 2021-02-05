@@ -29,6 +29,9 @@ func test() {
 	fmt.Println(*sp)
 }
 
-//func makeTest() {
-//	m := make(map[string]int, 10)
-//}
+func test2() {
+	var vstat *int
+	fmt.Println(vstat)
+	fmt.Println(&vstat)
+	fmt.Println(*&vstat)
+}
