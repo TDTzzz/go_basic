@@ -38,7 +38,7 @@ require (
 	github.com/tidwall/match v1.0.2 // indirect
 	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.3.0+incompatible // indirect
-	go.etcd.io/etcd v3.3.25+incompatible
+	go.etcd.io/etcd v3.3.25+incompatible // indirect
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5 // indirect
 	go.uber.org/ratelimit v0.1.0
 	go.uber.org/zap v1.16.0
