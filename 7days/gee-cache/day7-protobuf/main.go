@@ -58,6 +58,7 @@ func main() {
 	flag.BoolVar(&api, "api", false, "Start a api server?")
 	flag.Parse()
 
+
 	apiAddr := "http://localhost:9999"
 	addrMap := map[int]string{
 		8001: "http://localhost:8001",

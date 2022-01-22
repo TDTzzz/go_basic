@@ -2,6 +2,7 @@ package consistenthash
 
 import (
 	"hash/crc32"
+	"log"
 	"sort"
 	"strconv"
 )
@@ -28,14 +29,17 @@ func New(replicas int, fn Hash) *Map {
 }
 
 func (m *Map) Add(keys ...string) {
+	log.Println("keys:",keys)
 	for _, key := range keys {
 		for i := 0; i < m.replicas; i++ {
 			hash := int(m.hash([]byte(strconv.Itoa(i) + key)))
+			log.Println("----",strconv.Itoa(i) + key,"----",hash)
 			m.keys = append(m.keys, hash)
 			m.hashMap[hash] = key
 		}
 	}
 	sort.Ints(m.keys)
+	log.Println(m.keys)
 }
 
 func (m *Map) Get(key string) string {

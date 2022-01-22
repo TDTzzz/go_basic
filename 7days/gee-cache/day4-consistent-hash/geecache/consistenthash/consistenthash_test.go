@@ -42,3 +42,10 @@ func TestHashing(t *testing.T) {
 	}
 }
 
+//测试默认hash函数
+func TestHashingCrc32(t *testing.T) {
+	hash := New(3, nil)
+
+	hash.Add("3")
+
+}

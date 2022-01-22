@@ -47,10 +47,11 @@ func testAppend() {
 //扩容问题2
 func testAppend2() {
 	s := []int{1, 2}
-	//s = append(s, 3, 4, 5)
-	s = append(s, 3)
-	s = append(s, 4)
-	s = append(s, 5)
+	fmt.Printf("len=%d,cap=%d", len(s), cap(s))
+	s = append(s, 3, 4, 5)
+	//s = append(s, 3)
+	//s = append(s, 4)
+	//s = append(s, 5)
 	fmt.Printf("len=%d,cap=%d", len(s), cap(s))
 }
 
