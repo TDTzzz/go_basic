@@ -10,7 +10,7 @@ package main
  */
 //bfs
 func levelOrder(root *TreeNode) [][]int {
-	if root==nil{
+	if root == nil {
 		return nil
 	}
 	res := make([][]int, 0)
@@ -28,7 +28,7 @@ func levelOrder(root *TreeNode) [][]int {
 			}
 
 			if node.Right != nil {
-				p = append(p, node.Left)
+				p = append(p, node.Right)
 			}
 		}
 		p = q
